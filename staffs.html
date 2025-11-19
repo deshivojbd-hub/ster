@@ -784,7 +784,7 @@
                         <option value="Plating">Plating</option>
                         <option value="Dishwasher">Dishwasher</option>
                         <option value="Cashier">Cashier</option>
-                        <option value="Hygiene Officer">Hygiene Officer</option>
+                        <option value="Hygiene">Hygiene</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -853,7 +853,7 @@
             const splash = document.getElementById('asciiSplash');
             const mainTerminal = document.getElementById('mainTerminal');
             
-            // Hide splash screen after 3.5 seconds
+            // Hide splash screen after 5.5 seconds
             setTimeout(function() {
                 splash.classList.add('fade-out');
                 setTimeout(function() {
@@ -868,11 +868,13 @@
             staff: [],
             tables: [],
             kitchenStations: [
-                { id: 1, name: "Prep 1", assignedTo: null },
-                { id: 2, name: "Prep 2", assignedTo: null },
+                { id: 1, name: "Prep 0", assignedTo: null },
+                { id: 2, name: "Prep 1", assignedTo: null },
                 { id: 3, name: "Plating", assignedTo: null },
                 { id: 4, name: "Dishwasher", assignedTo: null }
+              
             ],
+            Hygiene:[],
             schedule: {},
             greetingTask: null
         };
@@ -1229,38 +1231,43 @@
                 const time = `${hour.toString().padStart(2, '0')}:00`;
                 schedule[time] = {
                     management: null,
-                    tables1_4: null,
-                    tables5_8: null,
-                    tables9_12: null,
-                    kitchenPrep: null,
-                    prep0: null,
+                    tables1_3: null,
+                    tables4_6: null,
+                    tables7_9: null,
+                    tables10_12: null,
+                    Prep0: null,
+                    prep1: null,
                     plating: null,
                     dishwasher: null,
-                    cashier: null
+                    cashier: null,
+                    Hygiene: null,
                 };
             }
             
             const managers = appData.staff.filter(s => s.role === 'Manager');
             const hosts = appData.staff.filter(s => s.role === 'Host');
             const prepStaff = appData.staff.filter(s => s.role.includes('Prep'));
-            const platingStaff = appData.staff.filter(s => s.role === 'Plating');
+            const plating = appData.staff.filter(s => s.role === 'Plating');
             const dishwashers = appData.staff.filter(s => s.role === 'Dishwasher');
             const cashiers = appData.staff.filter(s => s.role === 'Cashier');
+            const Hygiene = appData.staff.filter(s => s.role === 'Hygiene');
             
             Object.keys(schedule).forEach((time, index) => {
                 if (managers.length > 0) schedule[time].management = managers[index % managers.length].name;
                 if (hosts.length > 0) {
-                    schedule[time].tables1_4 = hosts[index % hosts.length].name;
-                    schedule[time].tables5_8 = hosts[(index + 1) % hosts.length].name;
-                    schedule[time].tables9_12 = hosts[(index + 2) % hosts.length].name;
+                    schedule[time].tables1_3 = hosts[index % hosts.length].name;
+                    schedule[time].tables4_6= hosts[(index + 1) % hosts.length].name;
+                    schedule[time].tables7_9 = hosts[(index + 2) % hosts.length].name;
+                    schedule[time].tables10_12 = hosts[(index + 3) % hosts.length].name;
                 }
                 if (prepStaff.length > 0) {
-                    schedule[time].kitchenPrep = prepStaff[index % prepStaff.length].name;
-                    schedule[time].prep0 = prepStaff[(index + 1) % prepStaff.length].name;
+                    schedule[time].Prep0 = prepStaff[index % prepStaff.length].name;
+                    schedule[time].prep1 = prepStaff[(index + 1) % prepStaff.length].name;
                 }
                 if (platingStaff.length > 0) schedule[time].plating = platingStaff[index % platingStaff.length].name;
                 if (dishwashers.length > 0) schedule[time].dishwasher = dishwashers[index % dishwashers.length].name;
                 if (cashiers.length > 0) schedule[time].cashier = cashiers[index % cashiers.length].name;
+                if (Hygiene.length > 0) schedule[time].Hygiene = Hygienes[index % Hygienes.length].name;
             });
             
             appData.schedule = schedule;
@@ -1285,14 +1292,16 @@
                 row.innerHTML = `
                     <td>${time}</td>
                     <td>${slot.management || '-'}</td>
-                    <td>${slot.tables1_4 || '-'}</td>
-                    <td>${slot.tables5_8 || '-'}</td>
-                    <td>${slot.tables9_12 || '-'}</td>
-                    <td>${slot.kitchenPrep || '-'}</td>
+                    <td>${slot.tables1_3 || '-'}</td>
+                    <td>${slot.tables4_6 || '-'}</td>
+                    <td>${slot.tables7_9 || '-'}</td>
+                    <td>${slot.tables10_12 || '-'}</td>
+                    <td>${slot.Prep || '-'}</td>
                     <td>${slot.prep0 || '-'}</td>
                     <td>${slot.plating || '-'}</td>
                     <td>${slot.dishwasher || '-'}</td>
                     <td>${slot.cashier || '-'}</td>
+                    <td>${slot.Hygiene || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
